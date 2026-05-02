@@ -6,6 +6,35 @@ Non-interactive AllScan installation and integration for the [RLNZ2](https://git
 
 ---
 
+## Existing RLNZ2 Owners
+
+If you already have a working RLNZ2 and want to add AllScan, log in at the ASL3 Control Center login prompt and run these two commands:
+
+```bash
+wget https://raw.githubusercontent.com/G1LRO/install-allscan-standalone/refs/heads/main/install-allscan.sh
+sudo bash install-allscan.sh
+```
+
+Once complete, you **must re-submit your node details via the RLNZ2 web setup** to apply your login password to AllScan.
+
+> **This step is required** — AllScan is installed with a temporary password that must be replaced with your real login password.
+
+The web setup address is shown on the RLNZ2 display:
+
+```
+http://<ip-shown-on-display>:8000/
+```
+
+Enter your node number, callsign, node password and login password as normal and submit. AllScan will then be ready at:
+
+```
+http://<ip-shown-on-display>/allscan/
+```
+
+Use username `rln` and your usual RLNZ2 login password.
+
+---
+
 ## Files
 
 | File | Purpose |
