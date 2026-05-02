@@ -423,6 +423,13 @@ else
     chmod +x "/home/rln/configure-asl3.sh"
 fi
 
+# Deploy updated index.html with AllScan button
+echo "  Deploying index.html..."
+wget -q "$RLNZ2_GITHUB/index.html" -O "/var/www/html/index.html" || {
+    echo "  WARNING: Failed to download index.html"
+}
+echo "  index.html deployed"
+
 # Restart config server to pick up the updated Python files
 if systemctl is-active --quiet rlnz2-config-server 2>/dev/null; then
     echo "  Restarting config server..."
