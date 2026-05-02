@@ -355,22 +355,24 @@ chmod 664 "$DBFILE"
 chgrp "$WEBGROUP" "$DBFILE"
 echo "  Database ready: $DBFILE"
 
-# Create a blank favorites.ini in /etc/allscan/ if not already present
-# (will be populated by RLNZ2 setup with the preconfigured favourites list)
+# Copy AllScan's sample favorites.ini to /etc/allscan/ if not already present
+# Preserves any existing favourites — only runs on a fresh install
 FAVSFILE="$ASDBDIR/favorites.ini"
+SAMPLE="$ASDIR/favorites-Sample.ini"
 if [[ ! -f "$FAVSFILE" ]]; then
-    cat > "$FAVSFILE" << 'FAVSEOF'
-; AllScan favorites file - managed by RLNZ2
-; Format:
-;   label[] = "Name NodeNumber"
-;   cmd[]   = "rpt cmd %node% ilink 3 NodeNumber"
-;
-[general]
-
-FAVSEOF
+    if [[ -f "$SAMPLE" ]]; then
+        cp "$SAMPLE" "$FAVSFILE"
+        echo "  Default favorites.ini copied from AllScan sample"
+    else
+        # Fallback — create minimal valid file if sample not found
+        printf '; AllScan favorites\n[general]\n' > "$FAVSFILE"
+        echo "  Minimal favorites.ini created (sample not found)"
+    fi
     chmod 664 "$FAVSFILE"
     chgrp "$WEBGROUP" "$FAVSFILE"
-    echo "  Blank favorites.ini created at $FAVSFILE"
+    echo "  Favourites file: $FAVSFILE"
+else
+    echo "  Existing favorites.ini preserved at $FAVSFILE"
 fi
 
 
