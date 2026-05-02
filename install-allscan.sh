@@ -373,6 +373,63 @@ FAVSEOF
     echo "  Blank favorites.ini created at $FAVSFILE"
 fi
 
+
+# -----------------------------------------------------------------------------
+# Step 9: Deploy RLNZ2 config server integration files from GitHub
+# -----------------------------------------------------------------------------
+echo ""
+echo "[9/9] Deploying RLNZ2 config server integration files..."
+
+RLNZ2_GITHUB="https://raw.githubusercontent.com/G1LRO/install-allscan-standalone/refs/heads/main"
+VENV_ROUTES="/home/rln/myenv/lib/python3.11/site-packages/server/routes"
+RLNZ2_DIR="/home/rln/rlnz2"
+
+# Deploy asl.py — adds -w login_password support to configure_asl3()
+if [[ -f "$VENV_ROUTES/asl.py" ]]; then
+    echo "  Deploying asl.py..."
+    wget -q "$RLNZ2_GITHUB/asl.py" -O "$VENV_ROUTES/asl.py" || {
+        echo "  WARNING: Failed to download asl.py — config server AllScan integration may not work"
+    }
+    echo "  asl.py deployed"
+else
+    echo "  WARNING: $VENV_ROUTES not found — is the config server installed?"
+fi
+
+# Deploy configuration.py — passes login_password to configure_asl3()
+if [[ -f "$VENV_ROUTES/configuration.py" ]]; then
+    echo "  Deploying configuration.py..."
+    wget -q "$RLNZ2_GITHUB/configuration.py" -O "$VENV_ROUTES/configuration.py" || {
+        echo "  WARNING: Failed to download configuration.py"
+    }
+    echo "  configuration.py deployed"
+fi
+
+# Deploy configure-asl3.sh — adds -w flag for AllScan password
+# The file lives in the rlnz2 repo dir (symlinked from /home/rln/)
+if [[ -d "$RLNZ2_DIR" ]]; then
+    echo "  Deploying configure-asl3.sh..."
+    wget -q "$RLNZ2_GITHUB/configure-asl3.sh" -O "$RLNZ2_DIR/configure-asl3.sh" || {
+        echo "  WARNING: Failed to download configure-asl3.sh"
+    }
+    chmod +x "$RLNZ2_DIR/configure-asl3.sh"
+    echo "  configure-asl3.sh deployed"
+else
+    echo "  WARNING: $RLNZ2_DIR not found — deploying configure-asl3.sh to /home/rln/ directly"
+    wget -q "$RLNZ2_GITHUB/configure-asl3.sh" -O "/home/rln/configure-asl3.sh" || {
+        echo "  WARNING: Failed to download configure-asl3.sh"
+    }
+    chmod +x "/home/rln/configure-asl3.sh"
+fi
+
+# Restart config server to pick up the updated Python files
+if systemctl is-active --quiet rlnz2-config-server 2>/dev/null; then
+    echo "  Restarting config server..."
+    systemctl restart rlnz2-config-server
+    echo "  Config server restarted"
+fi
+
+echo "  Integration files deployed."
+
 # -----------------------------------------------------------------------------
 # Done
 # -----------------------------------------------------------------------------
@@ -392,7 +449,7 @@ echo "    http://$HOSTNAME.local/allscan/"
 echo ""
 echo "  Admin login:"
 echo "    Username : $ALLSCAN_USER"
-echo "    Password : (as supplied to this script)"
+echo "    Password : rlnz2setup (temporary — update via web setup)"
 echo ""
 echo "  Favourites file:"
 echo "    $FAVSFILE"
