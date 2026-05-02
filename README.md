@@ -8,7 +8,7 @@ Non-interactive AllScan installation and integration for the [RLNZ2](https://git
 
 ## Existing RLNZ2 Owners
 
-If you already have a working RLNZ2 and want to add AllScan, log in at the ASL3 Web Admin Portal -> Teminal prompt and run these two commands:
+If you already have a working RLNZ2 and want to add AllScan, log in at the ASL3 Web Admin Portal → Terminal prompt and run these two commands:
 
 ```bash
 wget https://raw.githubusercontent.com/G1LRO/install-allscan-standalone/refs/heads/main/install-allscan.sh
@@ -32,6 +32,8 @@ http://<ip-shown-on-display>/allscan/
 ```
 
 Use username `rln` and your usual RLNZ2 login password.
+
+> **Tip:** Once installed, AllScan is also accessible via the **AllScan Favourites** button on the RLNZ2 homepage (`http://<ip-shown-on-display>/`).
 
 ---
 
