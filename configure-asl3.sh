@@ -699,8 +699,3 @@ else
     print_info "Backup location: $BACKUP_DIR"
     exit 1
 fi
-
-
-
-
-
